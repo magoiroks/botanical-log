@@ -1,0 +1,23 @@
+[
+    {
+        "origin": [
+            "http://localhost:3000",
+            "https://botanical-log.firebaseapp.com",
+            "https://botanical-log.web.app"
+        ],
+        "method": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "OPTIONS"
+        ],
+        "responseHeader": [
+            "Content-Type",
+            "Authorization",
+            "Content-Length",
+            "User-Agent"
+        ],
+        "maxAgeSeconds": 3600
+    }
+]

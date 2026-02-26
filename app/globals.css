@@ -1,26 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-cream: #F5F5DC;
+  --color-cream-dark: #EDE8C8;
+  --color-brown: #3E2723;
+  --color-brown-light: #6D4C41;
+  --color-green: #2E7D32;
+  --color-sepia: #A0856C;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-cream: #F5F5DC;
+  --color-cream-dark: #EDE8C8;
+  --color-brown: #3E2723;
+  --color-brown-light: #6D4C41;
+  --color-green: #2E7D32;
+  --color-sepia: #A0856C;
+  --font-serif: "Noto Sans JP", sans-serif;
+  --font-body: "Noto Sans JP", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+}
+
+/* Antique photo style */
+.photo-antique {
+  border-radius: 4px;
+  border: 1px solid rgba(62, 39, 35, 0.3);
+  box-shadow: 0 2px 8px rgba(62, 39, 35, 0.2), inset 0 0 0 3px rgba(245, 245, 220, 0.5);
+  filter: sepia(20%) contrast(1.05) brightness(0.98);
+}
+
+/* Decorative divider */
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-sepia);
+}
+
+.divider-ornament::before,
+.divider-ornament::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-sepia));
+}
+
+.divider-ornament::after {
+  background: linear-gradient(to left, transparent, var(--color-sepia));
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-sepia);
+  border-radius: 3px;
+}
+
+/* Button base */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background-color: var(--color-green);
+  color: var(--color-cream);
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1B5E20;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background-color: transparent;
+  color: var(--color-brown);
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
+  border: 1px solid rgba(62, 39, 35, 0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(62, 39, 35, 0.06);
+  border-color: var(--color-brown);
+}
+
+/* Card */
+.card-antique {
+  background-color: #FAFAF0;
+  border: 1px solid rgba(62, 39, 35, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(62, 39, 35, 0.08);
+}
+
+/* Input */
+.input-antique {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  background-color: #FDFDF5;
+  border: 1px solid rgba(62, 39, 35, 0.3);
+  border-radius: 2px;
+  color: var(--color-brown);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-antique:focus {
+  border-color: var(--color-green);
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.15);
+}
+
+.input-antique::placeholder {
+  color: var(--color-sepia);
+  opacity: 0.7;
+}
+
+/* Page transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(62, 39, 35, 0.2);
+  border-top-color: var(--color-brown);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
