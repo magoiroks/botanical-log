@@ -25,7 +25,12 @@ export interface FlowerPost {
     createdAt: Timestamp | null;
 }
 
-const COLLECTION = "posts";
+// Each community deployment gets its own isolated Firestore collection.
+// Set NEXT_PUBLIC_COMMUNITY_ID in Vercel env vars (e.g. "sakura-circle").
+// If unset, falls back to "posts" for backward compatibility.
+const communityId = process.env.NEXT_PUBLIC_COMMUNITY_ID || "";
+const COLLECTION = communityId ? `posts_${communityId}` : "posts";
+
 
 /** Subscribe to all posts ordered by creation time (newest first) */
 export function subscribePosts(callback: (posts: FlowerPost[]) => void) {
