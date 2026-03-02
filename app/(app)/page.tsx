@@ -159,20 +159,27 @@ export default function HomePage() {
         setStep("uploading");
         setError(null);
         try {
-            // Upload via server-side API route to avoid browser CORS
+            // Compress for upload — Vercel free tier has a 4.5MB payload limit
             let finalImageURL = previewURL ?? "";
             if (file) {
+                const uploadFile = await compressImageForAPI(file);
                 const uploadForm = new FormData();
-                uploadForm.append("file", file);
+                uploadForm.append("file", uploadFile);
                 uploadForm.append("userId", user.uid);
                 const uploadRes = await fetch("/api/upload", {
                     method: "POST",
                     body: uploadForm,
                 });
-                const uploadData = await uploadRes.json();
-                if (!uploadRes.ok) throw new Error(uploadData.error);
-                finalImageURL = uploadData.url;
+                let uploadData: { url?: string; error?: string };
+                try {
+                    uploadData = await uploadRes.json();
+                } catch {
+                    throw new Error(`アップロードエラー (HTTP ${uploadRes.status})`);
+                }
+                if (!uploadRes.ok) throw new Error(uploadData.error ?? "アップロードに失敗しました");
+                finalImageURL = uploadData.url ?? "";
             }
+
 
             await addPost({
                 userId: user.uid,
