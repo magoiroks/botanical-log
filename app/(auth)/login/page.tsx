@@ -41,7 +41,7 @@ export default function LoginPage() {
                 </div>
                 <p className="text-center text-sm leading-relaxed mt-2 max-w-xs"
                     style={{ color: "var(--color-brown-light)", fontFamily: "var(--font-body)" }}>
-                    友人と花の発見を記録し、<br />アンティーク地図上で共有しましょう。
+                    たくさん歩いて、たくさん見つける。
                 </p>
             </div>
 
