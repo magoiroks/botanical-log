@@ -90,7 +90,6 @@ export default function HomePage() {
         setStep("identifying");
         setError(null);
         try {
-            // Send file directly to server — no Firebase Storage needed yet (avoids CORS)
             const formData = new FormData();
             formData.append("file", file);
 
@@ -98,8 +97,16 @@ export default function HomePage() {
                 method: "POST",
                 body: formData,
             });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error);
+
+            // Safely parse JSON — Safari throws DOMException if response is non-JSON (e.g. 500 HTML)
+            let data: { candidates?: string[]; error?: string };
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error(`サーバーエラーが発生しました (HTTP ${res.status})`);
+            }
+
+            if (!res.ok) throw new Error(data.error ?? "AI識別に失敗しました");
 
             setCandidates(data.candidates ?? []);
             setSelectedName(data.candidates?.[0] ?? "");
@@ -109,6 +116,7 @@ export default function HomePage() {
             setStep("select");
         }
     }
+
 
 
     async function handleSave() {
