@@ -85,13 +85,46 @@ export default function HomePage() {
     }
 
 
+    /** Compress image to stay under Vercel's 4.5MB payload limit */
+    async function compressImageForAPI(sourceFile: File): Promise<File> {
+        const MAX_PX = 1024;
+        const QUALITY = 0.75;
+        return new Promise((resolve, reject) => {
+            const img = new window.Image();
+            const url = URL.createObjectURL(sourceFile);
+            img.onload = () => {
+                URL.revokeObjectURL(url);
+                const scale = Math.min(1, MAX_PX / Math.max(img.width, img.height));
+                const w = Math.round(img.width * scale);
+                const h = Math.round(img.height * scale);
+                const canvas = document.createElement("canvas");
+                canvas.width = w;
+                canvas.height = h;
+                canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+                canvas.toBlob(
+                    (blob) => {
+                        if (!blob) { reject(new Error("圧縮失敗")); return; }
+                        resolve(new File([blob], "image.jpg", { type: "image/jpeg" }));
+                    },
+                    "image/jpeg",
+                    QUALITY
+                );
+            };
+            img.onerror = reject;
+            img.src = url;
+        });
+    }
+
+
     async function handleIdentify() {
         if (!file || !user) return;
         setStep("identifying");
         setError(null);
         try {
+            // Compress before sending — Vercel free tier has a 4.5MB payload limit
+            const compressed = await compressImageForAPI(file);
             const formData = new FormData();
-            formData.append("file", file);
+            formData.append("file", compressed);
 
             const res = await fetch("/api/identify", {
                 method: "POST",
@@ -116,7 +149,6 @@ export default function HomePage() {
             setStep("select");
         }
     }
-
 
 
     async function handleSave() {
