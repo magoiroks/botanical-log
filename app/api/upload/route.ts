@@ -2,11 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { GoogleAuth } from "google-auth-library";
 
 async function getAccessToken(): Promise<string> {
-    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+    let privateKey = process.env.FIREBASE_PRIVATE_KEY ?? "";
+
+    // Fix common Vercel env var issues:
+    // 1. Remove surrounding quotes if user accidentally included them
+    privateKey = privateKey.replace(/^["']|["']$/g, "");
+    // 2. Convert escaped \n to real newlines
+    privateKey = privateKey.replace(/\\n/g, "\n");
+    // 3. Trim stray whitespace
+    privateKey = privateKey.trim();
 
     if (!privateKey || !clientEmail) {
-        throw new Error("Firebase Admin credentials not set in .env.local");
+        throw new Error("Firebase Admin credentials not set in environment variables");
     }
 
     const auth = new GoogleAuth({
